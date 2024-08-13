@@ -1,13 +1,11 @@
 {
-    "builds": [
-        {
-            "src": "/public/**",
-            "use": "@vercel/static"
-        }
-    ],
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.7.1"
+        },
+        "serve-static": {
+            "runtime": "nodejs@latest",
+            "handler": "serveStatic.js"
         }
     },
     "routes": [
