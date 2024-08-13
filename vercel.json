@@ -1,13 +1,8 @@
 {
-    "functions": {
-        "api/index.php": {
-            "runtime": "vercel-php@0.7.1"
-        },
-        "serve-static": {
-            "runtime": "nodejs@latest",
-            "handler": "serveStatic.js"
-        }
-    },
+    "builds": [
+        { "src": "/api/index.php", "use": "vercel-php@0.7.1" },
+        { "src": "/public/**", "use": "@vercel/static" }
+    ],
     "routes": [
         {
             "src": "/storage/(.*)",
