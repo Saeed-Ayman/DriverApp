@@ -28,14 +28,16 @@ class UserController extends Controller
         }
 
 
-        if (!\Str::contains($user->avatar, 'default')) {
-            \Storage::disk('public')
-                ->delete("avatars/".pathinfo($user->avatar, PATHINFO_BASENAME));
-        }
-
         info("1 - update avatar", [$request->avatar]);
 
         $avatarPath = $request->file('avatar')->store('avatars', 'public');
+
+        if (!$avatarPath) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Can't store image!",
+            ]);
+        }
 
         info("2 - new path", [$avatarPath]);
 
@@ -43,6 +45,11 @@ class UserController extends Controller
         $user->save();
 
         info("3 - full path", [$user->avatar]);
+
+        if (!\Str::contains($user->avatar, 'default')) {
+            \Storage::disk('public')
+                ->delete("avatars/".pathinfo($user->avatar, PATHINFO_BASENAME));
+        }
 
         return response()->json([
             "status" => "success",
