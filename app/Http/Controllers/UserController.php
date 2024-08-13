@@ -33,10 +33,16 @@ class UserController extends Controller
                 ->delete("avatars/".pathinfo($user->avatar, PATHINFO_BASENAME));
         }
 
+        info("1 - update avatar", [$request->avatar]);
+
         $avatarPath = $request->file('avatar')->store('avatars', 'public');
+
+        info("2 - new path", [$avatarPath]);
 
         $user->avatar = $avatarPath;
         $user->save();
+
+        info("3 - full path", [$user->avatar]);
 
         return response()->json([
             "status" => "success",
