@@ -21,8 +21,11 @@ class SlugCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): string
     {
-        $this->updateConfig($model, $key);
+        if ($value !== "") {
+            return $value;
+        }
 
+        $this->updateConfig($model, $key);
         $column = $this->config['primary_column'];
 
         return $this->getSlug($model->$column);

@@ -20,7 +20,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'avatar',
+        'phone',
         'email',
+        'username',
         'password',
     ];
 
@@ -49,5 +52,16 @@ class User extends Authenticatable
     {
         self::$slug_column = 'username';
         parent::__construct($attributes);
+    }
+
+    /**
+     * Define the type column to every Item object instance
+     *
+     * @param $path
+     * @return string
+     */
+    public function getAvatarAttribute($path): string
+    {
+        return asset(\Storage::url($path));
     }
 }
