@@ -66,7 +66,7 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$user->id],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'phone' => ['required', 'max:14', 'unique:users,phone,'.$user->id],
-            'password' => ['required'],
+//            'password' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -76,12 +76,12 @@ class UserController extends Controller
             ], 422);
         }
 
-        if (!\Hash::check($validator->getValue('password'), $user->password)) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Password is not correct!",
-            ], 401);
-        }
+//        if (!\Hash::check($validator->getValue('password'), $user->password)) {
+//            return response()->json([
+//                "status" => "error",
+//                "message" => "Password is not correct!",
+//            ], 401);
+//        }
 
         $user->update($validator->validated());
 
