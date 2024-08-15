@@ -18,7 +18,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         $validator = \Validator::make($request->all(), [
-            'avatar' => 'image|mimes:jpg,jpeg,bmp,svg,png|max:2048',
+            'avatar' => 'image|mimes:jpg,jpeg,bmp,svg,png|max:8192',
         ]);
 
         if ($validator->fails()) {
