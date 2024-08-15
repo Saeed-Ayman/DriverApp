@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('username');
-            $table->string('avatar')->default('avatars/avatar-default.svg');
+            $table->string('image_id')->default(\App\Models\User::DEFAULT_AVATAR);
             $table->string('phone');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

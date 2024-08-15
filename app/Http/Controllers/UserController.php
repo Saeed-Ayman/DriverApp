@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 
@@ -17,7 +18,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         $validator = \Validator::make($request->all(), [
-            'avatar' => 'required|image|max:2048',
+            'avatar' => 'image|mimes:jpg,jpeg,bmp,svg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -27,33 +28,83 @@ class UserController extends Controller
             ], 422);
         }
 
+        if (!$validator->getValue('avatar')) {
+            if ($user->avatar !== User::DEFAULT_AVATAR) {
+                \Cloudinary::destroy($user->image_id);
 
-        info("1 - update avatar", [$request->avatar]);
+                $user->image_id = User::DEFAULT_AVATAR;
+            }
+        } else {
+            $options = [
+                "format" => "png",
+                "folder" => "avatars"
+            ];
 
-        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $cloudinary = \Cloudinary::uploadFile($request->file('avatar')->getRealPath(), $options);
+            $public_id = $cloudinary->getPublicId();
 
-        if (!$avatarPath) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Can't store image!",
-            ]);
+            if (!$public_id) {
+                return response()->json([
+                    "status" => "error",
+                    "message" => "Can't store image!",
+                ]);
+            }
+
+            info("2 - new path", [$public_id]);
+
+            if ($user->image_id !== User::DEFAULT_AVATAR) {
+                \Cloudinary::destroy($user->image_id);
+            }
+
+            $user->image_id = $public_id;
         }
 
-        info("2 - new path", [$avatarPath]);
-
-        $user->avatar = $avatarPath;
         $user->save();
 
         info("3 - full path", [$user->avatar]);
 
-        if (!\Str::contains($user->avatar, 'default')) {
-            \Storage::disk('public')
-                ->delete("avatars/".pathinfo($user->avatar, PATHINFO_BASENAME));
+        return response()->json([
+            "status" => "success",
+            "avatar" => $user->avatar,
+        ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $user = auth()->user();
+
+        $validator = \Validator::make($request->all(), [
+            'password' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => "error",
+                "errors" => $validator->errors(),
+            ], 422);
+        }
+
+        if (!\Hash::check($validator->getValue('password'), $user->password)) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Password is not correct!",
+            ], 401);
+        }
+
+        if (!$user->delete()) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Something wrong please contact with developer!",
+            ]);
+        }
+
+        if ($user->image_id !== User::DEFAULT_AVATAR) {
+            \Cloudinary::destroy($user->image_id);
         }
 
         return response()->json([
             "status" => "success",
-            "avatar" => $user->avatar,
+            "message" => "Delete account success!",
         ]);
     }
 
@@ -119,42 +170,6 @@ class UserController extends Controller
         return response()->json([
             "status" => "success",
             "message" => "Update password successfully!",
-        ]);
-    }
-
-    public function destroy(Request $request)
-    {
-        $user = auth()->user();
-
-        $validator = \Validator::make($request->all(), [
-            'password' => ['required'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                "status" => "error",
-                "errors" => $validator->errors(),
-            ], 422);
-        }
-
-        if (!\Hash::check($validator->getValue('password'), $user->password)) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Password is not correct!",
-            ], 401);
-        }
-
-
-        if (!$user->delete()) {
-            return response()->json([
-                "status" => "error",
-                "message" => "Something wrong please contact with developer!",
-            ]);
-        }
-
-        return response()->json([
-            "status" => "success",
-            "message" => "Delete account success!",
         ]);
     }
 }

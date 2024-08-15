@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, HasSlug;
 
+    const DEFAULT_AVATAR = 'avatars/default-avatar';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,11 +22,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'avatar',
         'phone',
         'email',
         'username',
         'password',
+    ];
+
+    protected $appends = [
+        'avatar',
     ];
 
     /**
@@ -37,7 +42,8 @@ class User extends Authenticatable
         'remember_token',
         'created_at',
         'updated_at',
-        'email_verified_at'
+        'email_verified_at',
+        'image_id',
     ];
 
     /**
@@ -57,11 +63,10 @@ class User extends Authenticatable
     /**
      * Define the type column to every Item object instance
      *
-     * @param $path
      * @return string
      */
-    public function getAvatarAttribute($path): string
+    public function getAvatarAttribute(): string
     {
-        return asset(\Storage::url($path));
+        return \Cloudinary::getUrl($this->image_id ?? self::DEFAULT_AVATAR);
     }
 }
