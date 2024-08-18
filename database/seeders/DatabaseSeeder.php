@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Driver;
+use App\Models\Image;
+use App\Models\Review;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +17,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->callOnce(CountrySeeder::class);
+        $this->callOnce(CitySeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+//        User::factory(100)->create();
+
+        Driver::factory(30)->create()->each(function (Driver $driver) {
+            $driver->reviews()->saveMany(
+                Review::factory()->count(rand(0, 20))->create([
+                    'reviewable_type' => Driver::class,
+                    'reviewable_id' => $driver->id,
+                ])
+            );
+
+            $driver->Images()->saveMany(
+                Image::factory()->count(rand(2, 6))->create([
+                    'imageable_type' => Driver::class,
+                    'imageable_id' => $driver->id,
+                ])
+            );
+        });
     }
 }

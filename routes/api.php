@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ReviewsDriverController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::apiResource('drivers', DriverController::class);
+Route::apiResource('drivers.reviews', ReviewsDriverController::class);
 
 Route::middleware('auth:sanctum')->controller(UserController::class)->group(function () {
     Route::get('/user', 'show');
@@ -27,6 +29,12 @@ Route::get('/login', function () {
         'status' => 'error',
         'message' => 'Unauthorized',
     ], 401);
+});
+
+Route::get('/u', function () {
+   return \App\Models\User::first()
+       ->createToken('test')
+       ->plainTextToken;
 });
 
 require __DIR__.'/auth.php';

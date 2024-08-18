@@ -15,8 +15,8 @@ class ApiMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
+        $request->header('Content-Type', 'application/json');
 
-        return $response->header('Content-Type', 'application/json');
+        return $next($request);
     }
 }
