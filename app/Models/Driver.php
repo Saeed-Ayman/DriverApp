@@ -12,9 +12,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Driver extends Model
 {
     use HasFactory, HasSlug;
-
-//    protected $primaryKey = 'slug';
-
     protected $fillable = [
         'name',
         'phone',
@@ -71,12 +68,12 @@ class Driver extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function Images(): MorphMany
+    public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
     }
 
-    public function Image(): MorphOne
+    public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable');
     }

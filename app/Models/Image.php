@@ -9,7 +9,12 @@ class Image extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'url',
+        'image_id',
         'imageable',
     ];
+
+    public function getUrlAttribute(): string
+    {
+        return \Cloudinary::getUrl($this->image_id);
+    }
 }

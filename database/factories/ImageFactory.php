@@ -13,7 +13,7 @@ class ImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'url' => $this->faker->imageUrl(),
+            'image_id' => "testing/img{$this->faker->numberBetween(1, 4)}",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
