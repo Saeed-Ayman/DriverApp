@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ReviewCollection;
 use App\Http\Resources\ReviewResource;
 use App\Models\Driver;
 use App\Models\Review;
@@ -19,9 +20,7 @@ class ReviewsDriverController extends Controller
             $reviews->whereNot('user_id', $auth->user()->id);
         }
 
-        return ReviewResource::collection(
-            $reviews->latest()->simplePaginate(8)
-        );
+        return ReviewCollection::make ($reviews->latest()->Paginate(8));
     }
 
     public function store(Request $request)

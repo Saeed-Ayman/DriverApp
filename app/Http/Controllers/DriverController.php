@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DriverCollection;
 use App\Http\Resources\DriverResource;
 use App\Models\Driver;
 use Illuminate\Http\Request;
@@ -10,11 +11,11 @@ class DriverController extends Controller
 {
     public function index()
     {
-        return DriverResource::collection(
+        return DriverCollection::make(
             Driver::with('image')
                 ->withReviewsStatus()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
-                ->simplePaginate(8)
+                ->paginate(8)
         );
     }
 
