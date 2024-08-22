@@ -10,6 +10,12 @@ Route::get('/', function () {
 });
 
 Route::apiResource('drivers', DriverController::class);
+
+Route::controller(ReviewsDriverController::class)->group(function () {
+    Route::patch('drivers/{driver}/reviews', 'update')->name('drivers.reviews.update.custom');
+    Route::delete('drivers/{driver}/reviews', 'destroy')->name('drivers.reviews.destroy.custom');
+});
+
 Route::apiResource('drivers.reviews', ReviewsDriverController::class);
 
 Route::middleware('auth:sanctum')->controller(UserController::class)->group(function () {

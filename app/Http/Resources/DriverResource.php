@@ -30,11 +30,10 @@ class DriverResource extends JsonResource
                 'avatar' => $this->avatar,
             ]);
 
-
             $auth = Auth::guard('sanctum');
 
             if ($auth->check()) {
-                $rate = $this->reviews()->whereUserId(1)->first();
+                $rate = $this->reviews()->whereUserId($auth->id())->first();
 
                 if ($rate) {
                     $data['user_review'] = ReviewResource::make($rate);
