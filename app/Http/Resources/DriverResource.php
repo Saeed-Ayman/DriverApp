@@ -20,6 +20,7 @@ class DriverResource extends JsonResource
                 'count' => $this->reviews_count,
                 'average' => +$this->reviews_avg_stars,
             ],
+            'user_review' => null
         ];
 
         if ($this->hasAppended('all')) {
