@@ -11,12 +11,8 @@ class CountryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
             'id' => $this->id,
-            'name_ar' => $this->name_ar,
-            'name_en' => $this->name_en,
-            'code' => $this->code,
+            'name' => $this->name_en,
         ];
     }
 }

@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-/** @mixin \App\Models\Driver */
-class DriverResource extends JsonResource
+/** @mixin \App\Models\Location */
+class LocationResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         $data = [
             'name' => $this->name,
-            'username' => $this->slug,
+            'slug' => $this->slug,
             'reviews_status' => [
                 'count' => $this->reviews_count,
                 'average' => +$this->reviews_avg_stars,
@@ -22,10 +22,12 @@ class DriverResource extends JsonResource
 
         if ($this->hasAppended('all')) {
             $data = array_merge($data, [
-                'phone' => $this->phone,
-                'whatsapp' => $this->whatsapp,
                 'description' => $this->description,
-                'avatar' => $this->avatar,
+                'whatsapp' => $this->whatsapp,
+                'phone' => $this->phone,
+                'landline' => $this->landline,
+                'prices' => $this->prices,
+                'location' => $this->location,
                 'user_review' => null
             ]);
 
@@ -46,6 +48,14 @@ class DriverResource extends JsonResource
 
         if ($this->relationLoaded('images')) {
             $data['images'] = ImageResource::collection($this->images);
+        }
+
+        if ($this->relationLoaded('city')) {
+            $data['city'] = CityResource::make($this->city);
+        }
+
+        if ($this->relationLoaded('country')) {
+            $data['country'] = CityResource::make($this->country);
         }
 
         return $data;

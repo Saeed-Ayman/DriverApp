@@ -20,7 +20,7 @@ class ReviewFactory extends Factory
             'updated_at' => $this->faker->randomElement([$this->faker->dateTimeBetween($created_at), $created_at]),
             'stars' => $this->faker->numberBetween(1, 5),
             'content' => $this->faker->sentences(asText: true),
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::all()->random(1)->value('id'),
         ];
     }
 }
