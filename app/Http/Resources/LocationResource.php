@@ -20,6 +20,10 @@ class LocationResource extends JsonResource
             ],
         ];
 
+        if (!$this->hasAppended('all')) {
+            $data['excerpt'] = $this->excerpt;
+        }
+
         if ($this->hasAppended('all')) {
             $data = array_merge($data, [
                 'description' => $this->description,

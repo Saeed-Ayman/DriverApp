@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('image_id')->default(Location::DEFAULT_LOGO);
+            $table->string('excerpt');
             $table->string('description');
             $table->string('whatsapp');
             $table->string('phone');

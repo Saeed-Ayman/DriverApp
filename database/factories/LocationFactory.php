@@ -31,6 +31,7 @@ class LocationFactory extends Factory
             'updated_at' => Carbon::now(),
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
+            'excerpt' => $this->faker->text(30),
             'whatsapp' => $this->faker->e164PhoneNumber(),
             'phone' => $this->faker->e164PhoneNumber(),
             'landline' => $this->faker->e164PhoneNumber(),
