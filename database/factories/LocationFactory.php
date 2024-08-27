@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
 use App\Models\Country;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,10 +19,12 @@ class LocationFactory extends Factory
 
         $city = $country->cities()->get()->random(1)->value('id');
 
-        $prices = [];
+        $services = [];
 
         for ($i = 0; $i < $this->faker->numberBetween(1, 10); $i++) {
-            $prices["service" . ($i + 1)] = $this->faker->numberBetween(10, 100).'$';
+            $services[] = [
+                "service".($i + 1) => $this->faker->numberBetween(10, 100).'$'
+            ];
         }
 
         return [
@@ -35,7 +36,7 @@ class LocationFactory extends Factory
             'whatsapp' => $this->faker->e164PhoneNumber(),
             'phone' => $this->faker->e164PhoneNumber(),
             'landline' => $this->faker->e164PhoneNumber(),
-            'prices' => $prices,
+            'services' => $services,
             'location' => [
                 'lat' => $this->faker->latitude(),
                 'lng' => $this->faker->longitude(),

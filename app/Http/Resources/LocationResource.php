@@ -30,7 +30,7 @@ class LocationResource extends JsonResource
                 'whatsapp' => $this->whatsapp,
                 'phone' => $this->phone,
                 'landline' => $this->landline,
-                'prices' => $this->prices,
+                'services' => $this->services,
                 'location' => $this->location,
                 'user_review' => null
             ]);

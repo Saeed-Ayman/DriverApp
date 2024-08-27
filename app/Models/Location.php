@@ -24,12 +24,12 @@ class Location extends Model
         'whatsapp',
         'phone',
         'landline',
-        'prices',
+        'services',
         'location',
     ];
 
     protected $casts= [
-        'prices' => 'array',
+        'services' => 'array',
         'location' => 'array',
     ];
 

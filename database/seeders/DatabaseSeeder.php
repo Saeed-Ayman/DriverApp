@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         $this->callOnce(CountrySeeder::class);
         $this->callOnce(CitySeeder::class);
-        $this->call(DriverSeeder::class);
         $this->call(LocationSeeder::class);
+        $this->call(DriverSeeder::class);
     }
 }

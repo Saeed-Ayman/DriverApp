@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('whatsapp');
             $table->string('phone');
             $table->string('landline');
-            $table->json('prices');
+            $table->json('services');
             $table->json('location');
 
             $table->foreignIdFor(\App\Models\City::class)->constrained();
