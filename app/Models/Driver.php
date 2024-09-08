@@ -46,7 +46,7 @@ class Driver extends Model
      */
     public function getAvatarAttribute(): string
     {
-        return \Cloudinary::getUrl($this->image_id ?? User::DEFAULT_AVATAR);
+        return Image::getUrl($this->attributes['image_id']);
     }
 
     public function scopeWithReviewsStatus(Builder $builder): Builder

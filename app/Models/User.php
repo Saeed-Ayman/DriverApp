@@ -68,7 +68,7 @@ class User extends Authenticatable
      */
     public function getAvatarAttribute(): string
     {
-        return \Cloudinary::getUrl($this->image_id ?? self::DEFAULT_AVATAR);
+        return Image::getUrl($this->attributes['image_id']);
     }
 
     public function reviews(): HasMany

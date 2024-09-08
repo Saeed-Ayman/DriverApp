@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -29,8 +30,8 @@ class UserController extends Controller
         }
 
         if (!$validator->getValue('avatar')) {
-            if ($user->avatar !== User::DEFAULT_AVATAR) {
-                \Cloudinary::destroy($user->image_id);
+            if ($user->image_id !== User::DEFAULT_AVATAR) {
+                Image::destroy($user->image_id);
 
                 $user->image_id = User::DEFAULT_AVATAR;
             }
@@ -53,7 +54,7 @@ class UserController extends Controller
             info("2 - new path", [$public_id]);
 
             if ($user->image_id !== User::DEFAULT_AVATAR) {
-                \Cloudinary::destroy($user->image_id);
+                Image::destroy($user->image_id);
             }
 
             $user->image_id = $public_id;
@@ -99,7 +100,7 @@ class UserController extends Controller
         }
 
         if ($user->image_id !== User::DEFAULT_AVATAR) {
-            \Cloudinary::destroy($user->image_id);
+            Image::destroy($user->image_id);
         }
 
         return response()->json([
