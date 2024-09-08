@@ -20,9 +20,9 @@ class Image extends Model
 
     public static function getUrl(string $image_id): string
     {
-        if (cache()->has($image_id)) {
-            return cache()->get($image_id);
-        }
+//        if (cache()->has($image_id)) {
+//            return cache()->get($image_id);
+//        }
 
         $url = \Cloudinary::getUrl($image_id);
 
