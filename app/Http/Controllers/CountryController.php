@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return CountryResource::collection(Country::all());
+        $countries = Country::withCount('locations')
+            ->has('locations');
+
+        if ($request->has('q')) {
+            $countries->where('name_en', 'like', '%' . $request->input('q') . '%');
+        }
+
+        return CountryResource::collection(
+            $countries->orderByDesc('locations_count')
+                ->limit(5)
+                ->get()
+        );
     }
 
     public function store(Request $request)

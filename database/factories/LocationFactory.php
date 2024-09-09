@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Country;
+use App\Models\City;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -13,11 +13,9 @@ class LocationFactory extends Factory
 
     public function definition(): array
     {
-        $country = Country::with('cities')
-            ->whereRaw('(select count(*) from `cities` where `countries`.`id` = `cities`.`country_id`) > 0')
-            ->get()->random(1)->first();
+        $country = collect([59, 100])->random(1)->first();
 
-        $city = $country->cities()->get()->random(1)->value('id');
+        $city = City::where('country_id', $country)->get()->random(1)->value('id');
 
         $services = [];
 
@@ -41,7 +39,7 @@ class LocationFactory extends Factory
                 'lat' => $this->faker->latitude(),
                 'lng' => $this->faker->longitude(),
             ],
-            'country_id' => $country->value('id'),
+            'country_id' => $country,
             'city_id' => $city,
         ];
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\City;
+use App\Models\Country;
 use App\Models\Location;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -21,8 +23,8 @@ return new class extends Migration {
             $table->json('services');
             $table->json('location');
 
-            $table->foreignIdFor(\App\Models\City::class)->constrained();
-            $table->foreignIdFor(\App\Models\Country::class)->constrained();
+            $table->foreignIdFor(City::class)->constrained();
+            $table->foreignIdFor(Country::class)->constrained();
 
             $table->timestamps();
         });

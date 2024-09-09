@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    public function index()
+    public function index(Request $request, $countryId)
     {
-        return CityResource::collection(City::all());
+        $cities = City::where('country_id', $countryId)->has('locations')->withCount('locations');
+
+        if ($request->has('q')) {
+            $cities = $cities->where('name_en', 'like', '%'.$request->input('q').'%');
+        }
+
+        return CityResource::collection(
+            $cities->orderByDesc('locations_count')
+                ->limit(5)
+                ->get()
+        );
     }
 
     public function store(Request $request)
