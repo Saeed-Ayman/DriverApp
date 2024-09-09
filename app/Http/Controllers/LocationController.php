@@ -9,11 +9,28 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $locations = Location::with('image');
+
+        if ($request->has('q')) {
+            $locations = $locations->where('name', 'like', '%'.$request->input('q').'%');
+        }
+
+        if ($request->has('category')) {
+            $locations->where('location_category_id', $request->input('category'));
+        }
+
+        if ($request->has('country')) {
+            $locations->where('country_id', $request->input('country'));
+        }
+
+        if ($request->has('city')) {
+            $locations->where('city_id', $request->input('city'));
+        }
+
         return LocationCollection::make(
-            Location::with('image')
-                ->withReviewsStatus()
+            $locations->withReviewsStatus()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
                 ->paginate(8)
         );

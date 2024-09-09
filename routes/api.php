@@ -3,6 +3,7 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\LocationCategoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ReviewsDriverController;
 use App\Http\Controllers\ReviewsLocationController;
@@ -14,20 +15,23 @@ Route::get('/', function () {
 });
 
 Route::apiResource('drivers', DriverController::class);
+
+Route::apiResource('locations/categories', LocationCategoryController::class);
 Route::apiResource('locations', LocationController::class);
+Route::controller(ReviewsLocationController::class)->group(function () {
+    Route::patch('locations/{location}/reviews', 'update')->name('locations.reviews.update.custom');
+    Route::delete('locations/{location}/reviews', 'destroy')->name('locations.reviews.destroy.custom');
+});
+Route::apiResource('locations.reviews', ReviewsLocationController::class);
+
 
 Route::controller(ReviewsDriverController::class)->group(function () {
     Route::patch('drivers/{driver}/reviews', 'update')->name('drivers.reviews.update.custom');
     Route::delete('drivers/{driver}/reviews', 'destroy')->name('drivers.reviews.destroy.custom');
 });
 
-Route::controller(ReviewsLocationController::class)->group(function () {
-    Route::patch('locations/{location}/reviews', 'update')->name('locations.reviews.update.custom');
-    Route::delete('locations/{location}/reviews', 'destroy')->name('locations.reviews.destroy.custom');
-});
 
 Route::apiResource('drivers.reviews', ReviewsDriverController::class);
-Route::apiResource('locations.reviews', ReviewsLocationController::class);
 
 Route::apiResource('countries', CountryController::class);
 Route::apiResource('countries.cites', CityController::class);

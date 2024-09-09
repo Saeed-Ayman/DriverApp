@@ -35,9 +35,9 @@ class CountryController extends Controller
         return new CountryResource(Country::create($data));
     }
 
-    public function show(Country $country)
+    public function show($countryId)
     {
-        return new CountryResource($country);
+        return CountryResource::make(Country::findOrFail($countryId));
     }
 
     public function update(Request $request, Country $country)

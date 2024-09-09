@@ -35,9 +35,13 @@ class CityController extends Controller
         return new CityResource(City::create($data));
     }
 
-    public function show(City $city)
+    public function show($countryId, $cityId)
     {
-        return new CityResource($city);
+        return CityResource::make(
+            City::where('country_id', $countryId)
+                ->where('id', $cityId)
+                ->firstOrFail()
+        );
     }
 
     public function update(Request $request, City $city)

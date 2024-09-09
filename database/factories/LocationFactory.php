@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\City;
 use App\Models\Location;
+use App\Models\LocationCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -41,6 +42,7 @@ class LocationFactory extends Factory
             ],
             'country_id' => $country,
             'city_id' => $city,
+            'location_category_id' => LocationCategory::all()->random(1)->value('id'),
         ];
     }
 }
