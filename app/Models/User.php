@@ -68,7 +68,7 @@ class User extends Authenticatable
      */
     public function getAvatarAttribute(): string
     {
-        return Image::getUrl($this->attributes['image_id']);
+        return Image::getUrl($this->attributes['image_id'] ?? self::DEFAULT_AVATAR);
     }
 
     public function reviews(): HasMany
