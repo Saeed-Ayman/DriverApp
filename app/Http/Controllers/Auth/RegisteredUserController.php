@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -40,7 +39,7 @@ class RegisteredUserController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'user' => UserResource::make($user),
+            'user' => $user,
             'token' => [
                 'type' => 'Bearer',
                 'access' => $user->createToken('user-login')->plainTextToken,
