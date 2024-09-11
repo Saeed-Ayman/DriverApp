@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'user' => $user,
+            'user' => UserResource::make($user),
             'token' => [
                 'type' => 'Bearer',
                 'access' => $user->createToken('user-login')->plainTextToken,
