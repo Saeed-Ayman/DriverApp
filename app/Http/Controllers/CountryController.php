@@ -10,17 +10,28 @@ class CountryController extends Controller
 {
     public function index(Request $request)
     {
-        $countries = Country::withCount('locations')
-            ->has('locations');
+        $countries = Country::query();
 
         if ($request->has('q')) {
             $countries->where('name_en', 'like', '%' . $request->input('q') . '%');
         }
 
+        if ($request->routeIs('locations.countries.index')) {
+            $countries
+                ->withCount('locations')
+                ->has('locations')
+                ->orderByDesc('locations_count');
+        }
+
+        if ($request->routeIs('drivers.countries.index')) {
+            $countries
+                ->withCount('drivers')
+                ->has('drivers')
+                ->orderByDesc('drivers_count');
+        }
+
         return CountryResource::collection(
-            $countries->orderByDesc('locations_count')
-                ->limit(5)
-                ->get()
+            $countries->limit(5)->get()
         );
     }
 

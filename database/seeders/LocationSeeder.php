@@ -14,7 +14,7 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         collect(['bazaar', 'restraint', 'caffe', 'museum', 'bark', 'zoo'])->each(
-            fn($category_location) => LocationCategory::factory()->create(['name' => $category_location])
+            fn($category_location) => LocationCategory::create(['name' => $category_location])
         );
 
         Location::factory(30)->create()->each(function (Location $location) {

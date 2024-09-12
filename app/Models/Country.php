@@ -22,4 +22,9 @@ class Country extends Model
     {
         return $this->hasMany(Location::class);
     }
+
+    public function drivers(): HasMany
+    {
+        return $this->hasMany(Driver::class);
+    }
 }

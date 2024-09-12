@@ -16,11 +16,21 @@ class CityController extends Controller
             $cities = $cities->where('name_en', 'like', '%'.$request->input('q').'%');
         }
 
-        return CityResource::collection(
-            $cities->orderByDesc('locations_count')
-                ->limit(5)
-                ->get()
-        );
+        if ($request->routeIs('locations.countries.cities.index')) {
+            $cities
+                ->withCount('locations')
+                ->has('locations')
+                ->orderByDesc('locations_count');
+        }
+
+        if ($request->routeIs('drivers.countries.cities.index')) {
+            $cities
+                ->withCount('drivers')
+                ->has('drivers')
+                ->orderByDesc('drivers_count');
+        }
+
+        return CityResource::collection($cities->limit(5)->get());
     }
 
     public function store(Request $request)

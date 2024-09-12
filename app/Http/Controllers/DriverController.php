@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DriverCollection;
 use App\Http\Resources\DriverResource;
+use App\Http\Resources\LocationCollection;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return DriverCollection::make(
-            Driver::with('image')
-                ->withReviewsStatus()
+        $drivers = Driver::with('image');
+
+        if ($request->has('q')) {
+            $drivers = $drivers->where('name', 'like', '%'.$request->input('q').'%');
+        }
+
+        if ($request->has('country')) {
+            $drivers->where('country_id', $request->input('country'));
+        }
+
+        if ($request->has('city')) {
+            $drivers->where('city_id', $request->input('city'));
+        }
+
+        return LocationCollection::make(
+            $drivers->withReviewsStatus()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
                 ->paginate(8)
         );

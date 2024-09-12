@@ -24,4 +24,9 @@ class City extends Model
     {
         return $this->hasMany(Location::class, 'city_id');
     }
+
+    public function drivers(): HasMany
+    {
+        return $this->hasMany(Driver::class, 'city_id');
+    }
 }

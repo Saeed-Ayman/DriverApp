@@ -14,6 +14,12 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+Route::apiResource('locations/countries', CountryController::class)->names("locations.countries");
+Route::apiResource('locations/countries.cities', CityController::class)->names("locations.countries.cities");
+
+Route::apiResource('drivers/countries', CountryController::class)->names("drivers.countries");
+Route::apiResource('drivers/countries.cities', CityController::class)->names("drivers.countries.cities");
+
 Route::apiResource('drivers', DriverController::class);
 
 Route::apiResource('locations/categories', LocationCategoryController::class);
@@ -22,6 +28,7 @@ Route::controller(ReviewsLocationController::class)->group(function () {
     Route::patch('locations/{location}/reviews', 'update')->name('locations.reviews.update.custom');
     Route::delete('locations/{location}/reviews', 'destroy')->name('locations.reviews.destroy.custom');
 });
+
 Route::apiResource('locations.reviews', ReviewsLocationController::class);
 
 
@@ -30,11 +37,7 @@ Route::controller(ReviewsDriverController::class)->group(function () {
     Route::delete('drivers/{driver}/reviews', 'destroy')->name('drivers.reviews.destroy.custom');
 });
 
-
 Route::apiResource('drivers.reviews', ReviewsDriverController::class);
-
-Route::apiResource('countries', CountryController::class);
-Route::apiResource('countries.cites', CityController::class);
 
 Route::middleware('auth:sanctum')->controller(UserController::class)->group(function () {
     Route::get('/user', 'show');
