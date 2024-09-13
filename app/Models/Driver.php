@@ -74,6 +74,11 @@ class Driver extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    public function favorite(): MorphOne
+    {
+        return $this->morphOne(Favorite::class, 'favoriteable');
+    }
+
     public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable');

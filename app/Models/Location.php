@@ -78,6 +78,11 @@ class Location extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
+    public function favorite(): MorphOne
+    {
+        return $this->morphOne(Favorite::class, 'favoriteable');
+    }
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);

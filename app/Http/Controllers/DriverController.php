@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DriverCollection;
 use App\Http\Resources\DriverResource;
 use App\Http\Resources\LocationCollection;
 use App\Models\Driver;
@@ -25,7 +26,7 @@ class DriverController extends Controller
             $drivers->where('city_id', $request->input('city'));
         }
 
-        return LocationCollection::make(
+        return DriverCollection::make(
             $drivers->withReviewsStatus()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
                 ->paginate(8)
