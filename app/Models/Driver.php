@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\Auth;
 
 class Driver extends Model
 {
@@ -85,12 +86,18 @@ class Driver extends Model
 
     public function favorite(): MorphOne
     {
-        return $this->morphOne(Favorite::class, 'favoriteable')->where('user_id', auth('sanctum')->id());
+        return $this->morphOne(Favorite::class, 'favoriteable');
     }
 
     public function getFavoriteAttribute(): bool
     {
-        return $this->favorite()->exists();
+        $auth = Auth::guard('sanctum');
+
+        if ($auth->check()) {
+            return $this->favorite()->where('user_id', $auth->id())->exists();
+        }
+
+        return false;
     }
 
     public function image(): MorphOne

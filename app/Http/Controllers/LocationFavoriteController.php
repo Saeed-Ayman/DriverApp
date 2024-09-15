@@ -31,10 +31,13 @@ class LocationFavoriteController extends Controller
             ], 422);
         }
 
-        $driver = Location::where('slug', $request->get('slug'))->firstOrFail();
-        $driver->favorite()->create([
-            'user_id' => auth()->user()->id,
-        ]);
+        $location = Location::where('slug', $request->get('slug'))->firstOrFail();
+
+        if (!$location->favorite()->where('user_id', \Auth::id())->exists()) {
+            $location->favorite()->create([
+                'user_id' => \Auth::id(),
+            ]);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -44,8 +47,8 @@ class LocationFavoriteController extends Controller
 
     public function destroy($slug)
     {
-        $driver = Location::where('slug', $slug)->firstOrFail();
-        $driver->favorite()->where('user_id', \Auth::id())->delete();
+        $location = Location::where('slug', $slug)->firstOrFail();
+        $location->favorite()->where('user_id', \Auth::id())->delete();
 
         return response()->json([
             'status' => 'success',

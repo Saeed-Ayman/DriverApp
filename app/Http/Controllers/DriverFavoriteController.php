@@ -32,9 +32,12 @@ class DriverFavoriteController extends Controller
         }
 
         $driver = Driver::where('slug', $request->get('username'))->firstOrFail();
-        $driver->favorite()->create([
-            'user_id' => auth()->user()->id,
-        ]);
+
+        if (!$driver->favorite()->where('user_id', \Auth::id())->exists()) {
+            $driver->favorite()->create([
+                'user_id' => \Auth::id(),
+            ]);
+        }
 
         return response()->json([
             'status' => 'success',
