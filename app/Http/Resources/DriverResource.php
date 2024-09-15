@@ -14,6 +14,7 @@ class DriverResource extends JsonResource
         $data = [
             'name' => $this->name,
             'username' => $this->slug,
+            'favorite' => $this->favorite,
             'reviews_status' => [
                 'count' => $this->reviews_count,
                 'average' => +$this->reviews_avg_stars,

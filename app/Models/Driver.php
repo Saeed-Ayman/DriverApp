@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Driver extends Model
 {
     use HasFactory, HasSlug;
+
     protected $fillable = [
         'name',
         'phone',
@@ -24,6 +25,14 @@ class Driver extends Model
         'country',
         'government',
         'slug'
+    ];
+
+    protected $appends = [
+        'favorite',
+    ];
+
+    protected $with = [
+        'favorite',
     ];
 
     /**
@@ -76,7 +85,12 @@ class Driver extends Model
 
     public function favorite(): MorphOne
     {
-        return $this->morphOne(Favorite::class, 'favoriteable');
+        return $this->morphOne(Favorite::class, 'favoriteable')->where('user_id', auth('sanctum')->id());
+    }
+
+    public function getFavoriteAttribute(): bool
+    {
+        return $this->favorite()->exists();
     }
 
     public function image(): MorphOne

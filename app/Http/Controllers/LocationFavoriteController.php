@@ -12,6 +12,7 @@ class LocationFavoriteController extends Controller
     {
         return LocationCollection::make(
             Location::whereHas('favorite', fn($query) => $query->where('user_id', \Auth::id()))
+                ->with('image')
                 ->withReviewsStatus()
                 ->paginate(8)
         );

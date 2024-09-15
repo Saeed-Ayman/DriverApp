@@ -34,6 +34,14 @@ class Location extends Model
         'location' => 'array',
     ];
 
+    protected $appends = [
+        'favorite',
+    ];
+
+    protected $with = [
+        'favorite',
+    ];
+
     public static function getSlugColumn(): string
     {
         return 'name';
@@ -80,7 +88,12 @@ class Location extends Model
 
     public function favorite(): MorphOne
     {
-        return $this->morphOne(Favorite::class, 'favoriteable');
+        return $this->morphOne(Favorite::class, 'favoriteable')->where('user_id', auth('sanctum')->id());
+    }
+
+    public function getFavoriteAttribute(): bool
+    {
+        return $this->favorite()->exists();
     }
 
     public function country(): BelongsTo

@@ -12,6 +12,7 @@ class DriverFavoriteController extends Controller
     {
         return DriverCollection::make(
             Driver::whereHas('favorite', fn($query) => $query->where('user_id', \Auth::id()))
+                ->with('image')
                 ->withReviewsStatus()
                 ->paginate(8)
         );
