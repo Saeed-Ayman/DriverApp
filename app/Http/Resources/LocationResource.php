@@ -14,7 +14,7 @@ class LocationResource extends JsonResource
         $data = [
             'name' => $this->name,
             'slug' => $this->slug,
-            'favorite' => $this->favorite,
+            'favorite' => $this->favorite_exists,
             'reviews_status' => [
                 'count' => $this->reviews_count,
                 'average' => +$this->reviews_avg_stars,

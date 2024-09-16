@@ -35,14 +35,6 @@ class Location extends Model
         'location' => 'array',
     ];
 
-    protected $appends = [
-        'favorite',
-    ];
-
-    protected $with = [
-        'favorite',
-    ];
-
     public static function getSlugColumn(): string
     {
         return 'name';
@@ -72,6 +64,29 @@ class Location extends Model
             ->loadAvg('reviews', 'stars');
     }
 
+    public function scopeWithFavorites(Builder $builder): Builder
+    {
+        $auth = Auth::guard('sanctum');
+
+        return $builder->withExists(['favorite' => function (Builder $builder) use ($auth) {
+            $builder->where('user_id', $auth->id());
+        }]);
+    }
+
+    public function loadWithFavorites(): self
+    {
+        $auth = Auth::guard('sanctum');
+
+        return $this->loadExists(['favorite' => function (Builder $builder) use ($auth) {
+            $builder->where('user_id', $auth->id());
+        }]);
+    }
+
+    public function favorite(): MorphOne
+    {
+        return $this->morphOne(Favorite::class, 'favoriteable');
+    }
+
     public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable');
@@ -86,23 +101,6 @@ class Location extends Model
     {
         return $this->morphMany(Review::class, 'reviewable');
     }
-
-    public function favorite(): MorphOne
-    {
-        return $this->morphOne(Favorite::class, 'favoriteable');
-    }
-
-    public function getFavoriteAttribute(): bool
-    {
-        $auth = Auth::guard('sanctum');
-
-        if ($auth->check()) {
-            return $this->favorite()->where('user_id', $auth->id())->exists();
-        }
-
-        return false;
-    }
-
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);

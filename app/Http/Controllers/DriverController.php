@@ -27,7 +27,9 @@ class DriverController extends Controller
         }
 
         return DriverCollection::make(
-            $drivers->withReviewsStatus()
+            $drivers
+                ->withReviewsStatus()
+                ->withFavorites()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
                 ->paginate(8)
         );
@@ -52,6 +54,7 @@ class DriverController extends Controller
             $driver
                 ->load('images')
                 ->loadWithReviewsStatus()
+                ->loadWithFavorites()
                 ->append('all')
         );
     }

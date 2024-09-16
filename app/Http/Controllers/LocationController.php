@@ -31,6 +31,7 @@ class LocationController extends Controller
 
         return LocationCollection::make(
             $locations->withReviewsStatus()
+                ->withFavorites()
                 ->orderByRaw('(reviews_avg_stars * reviews_count) / (reviews_count + 10) desc')
                 ->paginate(8)
         );
@@ -56,6 +57,7 @@ class LocationController extends Controller
         return LocationResource::make(
             $location->load('images', 'country', 'city')
                 ->loadWithReviewsStatus()
+                ->loadWithFavorites()
                 ->append('all')
         );
     }

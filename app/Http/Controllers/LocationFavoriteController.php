@@ -14,6 +14,7 @@ class LocationFavoriteController extends Controller
             Location::whereHas('favorite', fn($query) => $query->where('user_id', \Auth::id()))
                 ->with('image')
                 ->withReviewsStatus()
+                ->withFavorites()
                 ->paginate(8)
         );
     }
