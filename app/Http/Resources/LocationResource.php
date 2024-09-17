@@ -33,6 +33,7 @@ class LocationResource extends JsonResource
                 'landline' => $this->landline,
                 'services' => $this->services,
                 'location' => $this->location,
+                'logo' => $this->logo,
                 'user_review' => null
             ]);
 

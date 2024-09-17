@@ -49,7 +49,7 @@ class Driver extends Model
      */
     public function getAvatarAttribute(): string
     {
-        return Image::getUrl($this->attributes['image_id']);
+        return Image::getUrl($this->attributes['image_id'] ?? User::DEFAULT_AVATAR);
     }
 
     public function scopeWithReviewsStatus(Builder $builder): Builder

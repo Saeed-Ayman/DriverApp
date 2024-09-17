@@ -30,7 +30,7 @@ class Location extends Model
         'location',
     ];
 
-    protected $casts= [
+    protected $casts = [
         'services' => 'array',
         'location' => 'array',
     ];
@@ -47,9 +47,8 @@ class Location extends Model
 
     public function getLogoAttribute(): string
     {
-        return \Cloudinary::getUrl($this->image_id ?? self::DEFAULT_LOGO);
+        return Image::getUrl($this->attributes['image_id'] ?? self::DEFAULT_LOGO);
     }
-
     public function scopeWithReviewsStatus(Builder $builder): Builder
     {
         return $builder
@@ -68,18 +67,22 @@ class Location extends Model
     {
         $auth = Auth::guard('sanctum');
 
-        return $builder->withExists(['favorite' => function (Builder $builder) use ($auth) {
-            $builder->where('user_id', $auth->id());
-        }]);
+        return $builder->withExists([
+            'favorite' => function (Builder $builder) use ($auth) {
+                $builder->where('user_id', $auth->id());
+            }
+        ]);
     }
 
     public function loadWithFavorites(): self
     {
         $auth = Auth::guard('sanctum');
 
-        return $this->loadExists(['favorite' => function (Builder $builder) use ($auth) {
-            $builder->where('user_id', $auth->id());
-        }]);
+        return $this->loadExists([
+            'favorite' => function (Builder $builder) use ($auth) {
+                $builder->where('user_id', $auth->id());
+            }
+        ]);
     }
 
     public function favorite(): MorphOne
@@ -101,6 +104,7 @@ class Location extends Model
     {
         return $this->morphMany(Review::class, 'reviewable');
     }
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
