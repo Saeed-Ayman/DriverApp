@@ -42,6 +42,7 @@ class Driver extends Model
         return 'slug';
     }
 
+
     /**
      * Define the type column to every Item object instance
      *

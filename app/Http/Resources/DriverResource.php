@@ -49,6 +49,14 @@ class DriverResource extends JsonResource
             $data['images'] = ImageResource::collection($this->images);
         }
 
+        if ($this->relationLoaded('city')) {
+            $data['city'] = CityResource::make($this->city);
+        }
+
+        if ($this->relationLoaded('country')) {
+            $data['country'] = CityResource::make($this->country);
+        }
+
         return $data;
     }
 }

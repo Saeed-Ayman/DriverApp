@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DriverCollection;
 use App\Http\Resources\DriverResource;
-use App\Http\Resources\LocationCollection;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 
@@ -52,7 +51,7 @@ class DriverController extends Controller
     {
         return DriverResource::make(
             $driver
-                ->load('images')
+                ->load('images', 'country', 'city')
                 ->loadWithReviewsStatus()
                 ->loadWithFavorites()
                 ->append('all')
