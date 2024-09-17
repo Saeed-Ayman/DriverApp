@@ -51,10 +51,7 @@ class DriverResource extends JsonResource
 
         if ($this->relationLoaded('city')) {
             $data['city'] = CityResource::make($this->city);
-        }
-
-        if ($this->relationLoaded('country')) {
-            $data['country'] = CityResource::make($this->country);
+            $data['country'] = CountryResource::make($this->city->country);
         }
 
         return $data;

@@ -51,7 +51,7 @@ class DriverController extends Controller
     {
         return DriverResource::make(
             $driver
-                ->load('images', 'country', 'city')
+                ->load('images', 'city')
                 ->loadWithReviewsStatus()
                 ->loadWithFavorites()
                 ->append('all')
