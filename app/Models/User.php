@@ -4,8 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -29,9 +31,7 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected $appends = [
-        'avatar',
-    ];
+    protected $appends = ['avatar'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,7 +44,6 @@ class User extends Authenticatable
         'created_at',
         'updated_at',
         'email_verified_at',
-        'image_id',
     ];
 
     /**
@@ -61,14 +60,16 @@ class User extends Authenticatable
         parent::__construct($attributes);
     }
 
-    /**
-     * Define the type column to every Item object instance
-     *
-     * @return string
-     */
-    public function getAvatarAttribute(): string
+    protected function avatar(): Attribute
     {
-        return Image::getUrl($this->attributes['image_id'] ?? self::DEFAULT_AVATAR);
+        return Attribute::make(
+            get: fn($value, array $attributes) => $this->image()->value('image_url') ?? Image::getUrl(self::DEFAULT_AVATAR),
+        );
+    }
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     public function reviews(): HasMany

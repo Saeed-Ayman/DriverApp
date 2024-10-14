@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Driver;
 use App\Models\Image;
+use App\Models\Location;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DriverSeeder extends Seeder
@@ -12,19 +14,15 @@ class DriverSeeder extends Seeder
     public function run(): void
     {
         Driver::factory(30)->create()->each(function (Driver $driver) {
-            $driver->reviews()->saveMany(
-                Review::factory()->count(rand(0, 20))->create([
-                    'reviewable_type' => Driver::class,
-                    'reviewable_id' => $driver->id,
-                ])
-            );
+            $driver->reviews()->saveMany(Review::factory(rand(0, 20))->make());
+            $driver->images()->saveMany(Image::factory(rand(1, 4))->make());
 
-            $driver->images()->saveMany(
-                Image::factory()->count(rand(2, 6))->create([
-                    'imageable_type' => Driver::class,
-                    'imageable_id' => $driver->id,
-                ])
-            );
+            Image::create([
+                'imageable_type' => Driver::class . '\\avatar',
+                'imageable_id' => $driver->id,
+                'image_id' => User::DEFAULT_AVATAR,
+                'image_url' => Image::getUrl(User::DEFAULT_AVATAR),
+            ]);
         });
     }
 }

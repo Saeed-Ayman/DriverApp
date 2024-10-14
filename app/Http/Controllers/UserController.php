@@ -29,40 +29,23 @@ class UserController extends Controller
             ], 422);
         }
 
-        if (!$validator->getValue('avatar')) {
-            if ($user->image_id !== User::DEFAULT_AVATAR) {
-                Image::destroy($user->image_id);
+        $image = $user->image();
 
-                $user->image_id = User::DEFAULT_AVATAR;
-            }
-        } else {
+        if ($validator->getValue('avatar')) {
             $options = [
                 "format" => "png",
                 "folder" => "avatars"
             ];
 
             $cloudinary = \Cloudinary::uploadFile($request->file('avatar')->getRealPath(), $options);
-            $public_id = $cloudinary->getPublicId();
 
-            if (!$public_id) {
-                return response()->json([
-                    "status" => "error",
-                    "message" => "Can't store image!",
-                ]);
-            }
-
-            info("2 - new path", [$public_id]);
-
-            if ($user->image_id !== User::DEFAULT_AVATAR) {
-                Image::destroy($user->image_id);
-            }
-
-            $user->image_id = $public_id;
+            $image->updateOrCreate([
+                'image_id' => $cloudinary->getPublicId(),
+                'image_url' => $cloudinary->getPath(),
+            ]);
+        } else {
+            $image->delete();
         }
-
-        $user->save();
-
-        info("3 - full path", [$user->avatar]);
 
         return response()->json([
             "status" => "success",
@@ -109,8 +92,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateInfo(Request $request)
-    {
+    public function updateInfo(
+        Request $request
+    ) {
         $user = auth()->user();
 
         $validator = \Validator::make($request->all(), [
@@ -118,7 +102,6 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$user->id],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'phone' => ['required', 'max:14', 'unique:users,phone,'.$user->id],
-//            'password' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -127,13 +110,6 @@ class UserController extends Controller
                 "errors" => $validator->errors(),
             ], 422);
         }
-
-//        if (!\Hash::check($validator->getValue('password'), $user->password)) {
-//            return response()->json([
-//                "status" => "error",
-//                "message" => "Password is not correct!",
-//            ], 401);
-//        }
 
         $user->update($validator->validated());
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasSlug;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,8 +19,6 @@ class Driver extends Model
     protected $fillable = [
         'name',
         'phone',
-        'image_id',
-        'images',
         'description',
         'phone',
         'whatsapp',
@@ -27,7 +26,6 @@ class Driver extends Model
         'government',
         'slug'
     ];
-
 
     /**
      * @return string
@@ -42,15 +40,14 @@ class Driver extends Model
         return 'slug';
     }
 
-
-    /**
-     * Define the type column to every Item object instance
-     *
-     * @return string
-     */
-    public function getAvatarAttribute(): string
+    protected function avatar(): Attribute
     {
-        return Image::getUrl($this->attributes['image_id'] ?? User::DEFAULT_AVATAR);
+        return Attribute::make(
+            get: fn($value, array $attributes) => Image::select('image_url')
+                ->where('imageable_type', self::class . '\\avatar')
+                ->where('imageable_id', $this->id)->value('image_url'),
+            set: fn($value) => $value,
+        );
     }
 
     public function scopeWithReviewsStatus(Builder $builder): Builder
@@ -71,18 +68,22 @@ class Driver extends Model
     {
         $auth = Auth::guard('sanctum');
 
-        return $builder->withExists(['favorite' => function (Builder $builder) use ($auth) {
-            $builder->where('user_id', $auth->id());
-        }]);
+        return $builder->withExists([
+            'favorite' => function (Builder $builder) use ($auth) {
+                $builder->where('user_id', $auth->id());
+            }
+        ]);
     }
 
     public function loadWithFavorites(): self
     {
         $auth = Auth::guard('sanctum');
 
-        return $this->loadExists(['favorite' => function (Builder $builder) use ($auth) {
-            $builder->where('user_id', $auth->id());
-        }]);
+        return $this->loadExists([
+            'favorite' => function (Builder $builder) use ($auth) {
+                $builder->where('user_id', $auth->id());
+            }
+        ]);
     }
 
     public function favorite(): MorphOne

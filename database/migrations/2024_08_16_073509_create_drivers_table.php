@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('phone');
-            $table->string('image_id')->default(User::DEFAULT_AVATAR);
             $table->string('description');
             $table->string('whatsapp');
             $table->string('country');

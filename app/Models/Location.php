@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasSlug;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +22,6 @@ class Location extends Model
     protected $fillable = [
         'name',
         'excerpt',
-        'image_id',
         'description',
         'whatsapp',
         'phone',
@@ -40,15 +40,21 @@ class Location extends Model
         return 'name';
     }
 
+    protected function logo(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, array $attributes) => Image::select('image_url')
+                ->where('imageable_type', self::class . '\\logo')
+                ->where('imageable_id', $this->id)->value('image_url'),
+            set: fn($value) => $value,
+        );
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
-    public function getLogoAttribute(): string
-    {
-        return Image::getUrl($this->attributes['image_id'] ?? self::DEFAULT_LOGO);
-    }
     public function scopeWithReviewsStatus(Builder $builder): Builder
     {
         return $builder

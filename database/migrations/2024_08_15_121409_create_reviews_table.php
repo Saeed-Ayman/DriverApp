@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('stars');
+            $table->float('stars', 1);
             $table->string('content');
             $table->morphs('reviewable');
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();

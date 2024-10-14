@@ -42,7 +42,7 @@ class LocationFactory extends Factory
             ],
             'country_id' => $country,
             'city_id' => $city,
-            'location_category_id' => LocationCategory::all()->random(1)->value('id'),
+            'location_category_id' => $this->faker->numberBetween(1, 6),
         ];
     }
 }

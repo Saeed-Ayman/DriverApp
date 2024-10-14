@@ -12,8 +12,10 @@ class ImageFactory extends Factory
 
     public function definition(): array
     {
+        $img_id = "testing/img".fake()->numberBetween(1, 4);
         return [
-            'image_id' => "testing/img{$this->faker->numberBetween(1, 4)}",
+            'image_id' => $img_id,
+            'image_url' => Image::getUrl($img_id),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

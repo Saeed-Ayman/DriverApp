@@ -18,19 +18,15 @@ class LocationSeeder extends Seeder
         );
 
         Location::factory(30)->create()->each(function (Location $location) {
-            $location->reviews()->saveMany(
-                Review::factory()->count(rand(0, 20))->create([
-                    'reviewable_type' => Driver::class,
-                    'reviewable_id' => $location->id,
-                ])
-            );
+            $location->reviews()->saveMany(Review::factory(rand(0, 20))->make());
+            $location->images()->saveMany(Image::factory(rand(1, 5))->make());
 
-            $location->images()->saveMany(
-                Image::factory()->count(rand(2, 6))->create([
-                    'imageable_type' => Driver::class,
-                    'imageable_id' => $location->id,
-                ])
-            );
+            Image::create([
+                'imageable_type' => Location::class . '\\logo',
+                'imageable_id' => $location->id,
+                'image_id' => Location::DEFAULT_LOGO,
+                'image_url' => Image::getUrl(Location::DEFAULT_LOGO),
+            ]);
         });
     }
 }
