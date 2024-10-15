@@ -21,7 +21,7 @@ class DriverSeeder extends Seeder
                 'imageable_type' => Driver::class . '\\avatar',
                 'imageable_id' => $driver->id,
                 'image_id' => User::DEFAULT_AVATAR,
-                'image_url' => Image::getUrl(User::DEFAULT_AVATAR),
+                'image_url' => User::DEFAULT_AVATAR_URL,
             ]);
         });
     }
