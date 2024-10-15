@@ -17,6 +17,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens, HasSlug;
 
     const DEFAULT_AVATAR = 'avatars/default-avatar';
+    const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dsfqhttuc/image/upload/v1725274261/avatars/default-avatar.jpg';
 
     /**
      * The attributes that are mass assignable.
@@ -63,7 +64,7 @@ class User extends Authenticatable
     protected function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn($value, array $attributes) => $this->image()->value('image_url') ?? Image::getUrl(self::DEFAULT_AVATAR),
+            get: fn($value, array $attributes) => $this->image()->value('image_url') ?? self::DEFAULT_AVATAR_URL,
         );
     }
 

@@ -17,7 +17,7 @@ class Location extends Model
 {
     use HasFactory, HasSlug;
 
-    const DEFAULT_LOGO = 'logos/default-logo';
+    const DEFAULT_LOGO = 'https://res.cloudinary.com/dsfqhttuc/image/upload/v1724692831/logos/default-logo.png';
 
     protected $fillable = [
         'name',

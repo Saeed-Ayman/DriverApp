@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 
@@ -41,7 +39,7 @@ class UserController extends Controller
 
             $image->updateOrCreate([
                 'image_id' => $cloudinary->getPublicId(),
-                'image_url' => $cloudinary->getPath(),
+                'image_url' => $cloudinary->getSecurePath(),
             ]);
         } else {
             $image->delete();
@@ -75,15 +73,13 @@ class UserController extends Controller
             ], 401);
         }
 
+        $user->image()->delete();
+
         if (!$user->delete()) {
             return response()->json([
                 "status" => "error",
                 "message" => "Something wrong please contact with developer!",
             ]);
-        }
-
-        if ($user->image_id !== User::DEFAULT_AVATAR) {
-            Image::destroy($user->image_id);
         }
 
         return response()->json([
@@ -92,9 +88,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateInfo(
-        Request $request
-    ) {
+    public function updateInfo(Request $request)
+    {
         $user = auth()->user();
 
         $validator = \Validator::make($request->all(), [
